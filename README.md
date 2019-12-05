@@ -1,8 +1,8 @@
-# WarehouseService
+# Warehouse Service
 
-#### FIRST RUN
+## FIRST RUN
 
-##### Set up empty database
+### Set up empty database
 
 With **docker** go to your app root directory and type
 
@@ -12,7 +12,7 @@ If you already have database server edit `application.properties` file located i
 
 ____
 
-##### Application Start
+### Application Start
 
 **Application will generate tables and sample data.**
 
