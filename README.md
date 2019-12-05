@@ -25,3 +25,10 @@ You can run .jar file directly. To generate .jar file go to you application root
 
 Your jar file will be located in `./target` directory. You can simply run him by typing
 `java -jar .\target\JarNameHere.jar`
+
+___
+
+IDE Preparation
+
+Application use Lombok plugin. To install it in IntelliJ press ctrl + alt + s go to plugin section search for `lombok` 
+install it and restart your IDE

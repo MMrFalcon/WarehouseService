@@ -1,6 +1,6 @@
 package com.falcon.warehouse.domain;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,7 +9,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
 public class Product {
 
     @Id
@@ -32,4 +36,11 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private Set<ProductLocalisation> productLocalisations = new HashSet<>();
 
+    @Builder
+    public Product(@NotNull String productIndex, @NotNull String name, @NotNull BigDecimal quantity, Set<ProductLocalisation> productLocalisations) {
+        this.productIndex = productIndex;
+        this.name = name;
+        this.quantity = quantity;
+        this.productLocalisations = productLocalisations;
+    }
 }
