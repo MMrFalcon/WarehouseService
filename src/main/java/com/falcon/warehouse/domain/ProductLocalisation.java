@@ -1,7 +1,7 @@
 package com.falcon.warehouse.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,7 +9,11 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames={"localisation_id", "product_id"}))
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
 public class ProductLocalisation {
 
     @Id
@@ -30,4 +34,11 @@ public class ProductLocalisation {
     @JsonIgnoreProperties("productLocalisations")
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @Builder
+    public ProductLocalisation(@NotNull BigDecimal quantityInLocalisation, Localisation localisation, Product product) {
+        this.quantityInLocalisation = quantityInLocalisation;
+        this.localisation = localisation;
+        this.product = product;
+    }
 }

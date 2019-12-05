@@ -3,7 +3,6 @@ package com.falcon.warehouse.repository;
 import com.falcon.warehouse.domain.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -15,14 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @ActiveProfiles("test")
-class ProductRepositoryTestIT {
+class ProductRepositoryTestIT extends AbstractRepository {
 
     private final String PRODUCT_INDEX = "Product Index";
     private final String PRODUCT_NAME= "Product Name";
     private final BigDecimal PRODUCT_QUANTITY = new BigDecimal("123.23");
-
-    @Autowired
-    private ProductRepository productRepository;
 
     @BeforeEach
     void setUp() {
