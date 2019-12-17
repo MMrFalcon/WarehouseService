@@ -32,7 +32,8 @@ public class Localisation {
     private Set<ProductLocalisation> productLocalisations = new HashSet<>();
 
     @Builder
-    public Localisation(@NotNull String localisationIndex, @NotNull String localisationName, Set<ProductLocalisation> productLocalisations) {
+    public Localisation(Long id, @NotNull String localisationIndex, @NotNull String localisationName, Set<ProductLocalisation> productLocalisations) {
+        this.id = id;
         this.localisationIndex = localisationIndex;
         this.localisationName = localisationName;
         this.productLocalisations = productLocalisations;

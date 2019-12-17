@@ -37,7 +37,8 @@ public class Product {
     private Set<ProductLocalisation> productLocalisations = new HashSet<>();
 
     @Builder
-    public Product(@NotNull String productIndex, @NotNull String name, @NotNull BigDecimal quantity, Set<ProductLocalisation> productLocalisations) {
+    public Product(Long id, @NotNull String productIndex, @NotNull String name, @NotNull BigDecimal quantity, Set<ProductLocalisation> productLocalisations) {
+        this.id = id;
         this.productIndex = productIndex;
         this.name = name;
         this.quantity = quantity;

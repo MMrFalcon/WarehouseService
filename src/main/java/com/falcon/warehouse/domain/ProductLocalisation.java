@@ -36,7 +36,8 @@ public class ProductLocalisation {
     private Product product;
 
     @Builder
-    public ProductLocalisation(@NotNull BigDecimal quantityInLocalisation, Localisation localisation, Product product) {
+    public ProductLocalisation(Long id, @NotNull BigDecimal quantityInLocalisation, Localisation localisation, Product product) {
+        this.id = id;
         this.quantityInLocalisation = quantityInLocalisation;
         this.localisation = localisation;
         this.product = product;
