@@ -19,7 +19,7 @@ ____
 You can run application with Maven. To do this go to your app root directory and type
 `./mvnw spring-boot:run`
 
-You can run .jar file directly. To generate .jar file go to you application root directory and type
+You can run .jar file directly. To generate .jar file go to your application root directory and type
 `./mvnw clean`
 `./mvnw install`
 
@@ -30,5 +30,5 @@ ___
 
 IDE Preparation
 
-Application use Lombok plugin. To install it in IntelliJ press ctrl + alt + s go to plugin section search for `lombok` 
+Application using Lombok plugin. To install it in IntelliJ press ctrl + alt + s go to plugin section search for `lombok` 
 install it and restart your IDE

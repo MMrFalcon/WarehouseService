@@ -68,5 +68,21 @@ class ProductLocalisationMapperTest {
 
     @Test
     void convertToEntity() {
+        final BigDecimal NEW_QUANTITY_IN_LOCALISATION = new BigDecimal("333.123");
+        ProductLocalisationDto productLocalisationDto = new ProductLocalisationDto();
+        productLocalisationDto.setQuantityInLocalisation(NEW_QUANTITY_IN_LOCALISATION);
+        productLocalisationDto.setId(PRODUCT_LOCALISATION_ID);
+        productLocalisationDto.setLocalisationId(LOCALISATION_ID);
+        productLocalisationDto.setProductId(PRODUCT_ID);
+        productLocalisationDto.setLocalisationIndex(LOCALISATION_INDEX);
+        productLocalisationDto.setProductIndex(PRODUCT_INDEX);
+
+        ProductLocalisation productLocalisation = productLocalisationMapper.convertToEntity(productLocalisationDto);
+        assertEquals(NEW_QUANTITY_IN_LOCALISATION, productLocalisation.getQuantityInLocalisation());
+        assertEquals(PRODUCT_LOCALISATION_ID, productLocalisation.getId());
+        assertEquals(PRODUCT_ID, productLocalisation.getProduct().getId());
+        assertEquals(PRODUCT_INDEX, productLocalisation.getProduct().getProductIndex());
+        assertEquals(LOCALISATION_ID, productLocalisation.getLocalisation().getId());
+        assertEquals(LOCALISATION_INDEX, productLocalisation.getLocalisation().getLocalisationIndex());
     }
 }
