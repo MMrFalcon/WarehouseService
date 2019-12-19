@@ -4,10 +4,10 @@ import com.falcon.warehouse.WarehouseApplication;
 import com.falcon.warehouse.domain.Localisation;
 import com.falcon.warehouse.domain.Product;
 import com.falcon.warehouse.domain.ProductLocalisation;
-import com.falcon.warehouse.dto.LocalisationDto;
+import com.falcon.warehouse.dto.ProductDto;
 import com.falcon.warehouse.repository.AbstractRepository;
-import com.falcon.warehouse.service.LocalisationService;
-import com.falcon.warehouse.service.mapper.LocalisationMapper;
+import com.falcon.warehouse.service.ProductService;
+import com.falcon.warehouse.service.mapper.ProductMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = WarehouseApplication.class)
 @ActiveProfiles("test")
 @Transactional
-class LocalisationControllerTestIT extends AbstractRepository {
+class ProductControllerTest extends AbstractRepository {
 
     private final String LOCALISATION_INDEX = "RandomIndex123";
     private final String LOCALISATION_NAME = "RANDOM NAME";
@@ -46,24 +46,23 @@ class LocalisationControllerTestIT extends AbstractRepository {
     private Product product;
 
     @Autowired
-    private LocalisationService localisationService;
+    private ProductService productService;
 
     @Autowired
-    private LocalisationMapper localisationMapper;
+    private ProductMapper productMapper;
 
     private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        final LocalisationController localisationController = new LocalisationController(localisationService);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(localisationController).build();
+        final ProductController productController = new ProductController(productService);
 
+        mockMvc = MockMvcBuilders.standaloneSetup(productController).build();
     }
 
     @Test
-    void getLocalisationByIndex() throws Exception {
-
+    void getProductByIndex() throws Exception {
         localisation = localisationRepository.saveAndFlush(Localisation.builder().localisationIndex(LOCALISATION_INDEX)
                 .localisationName(LOCALISATION_NAME).build());
 
@@ -78,17 +77,18 @@ class LocalisationControllerTestIT extends AbstractRepository {
         product = productRepository.saveAndFlush(product);
         localisation = localisationRepository.saveAndFlush(localisation);
 
-        mockMvc.perform(get("/api/localisation/index/{localisationIndex}", LOCALISATION_INDEX))
+        mockMvc.perform(get("/api/product/index/{productIndex}", PRODUCT_INDEX))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.localisationIndex").value(LOCALISATION_INDEX))
-                .andExpect(jsonPath("$.localisationName").value(LOCALISATION_NAME))
+                .andExpect(jsonPath("$.productIndex").value(PRODUCT_INDEX))
+                .andExpect(jsonPath("$.name").value(PRODUCT_NAME))
+                .andExpect(jsonPath("$.quantity").value(PRODUCT_QUANTITY))
                 .andExpect(jsonPath("$.productLocalisations.[0].quantityInLocalisation").value(PRODUCT_LOCALISATION_QUANTITY));
-
     }
 
     @Test
-    void getAllLocalisations() throws Exception {
+    void getAllProducts() throws Exception {
+
         localisation = localisationRepository.saveAndFlush(Localisation.builder().localisationIndex(LOCALISATION_INDEX)
                 .localisationName(LOCALISATION_NAME).build());
 
@@ -103,58 +103,49 @@ class LocalisationControllerTestIT extends AbstractRepository {
         product = productRepository.saveAndFlush(product);
         localisation = localisationRepository.saveAndFlush(localisation);
 
-        mockMvc.perform(get("/api/localisation"))
+        mockMvc.perform(get("/api/product"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.[0].localisationIndex").value(LOCALISATION_INDEX))
-                .andExpect(jsonPath("$.[0].localisationName").value(LOCALISATION_NAME))
+                .andExpect(jsonPath("$.[0].productIndex").value(PRODUCT_INDEX))
+                .andExpect(jsonPath("$.[0].name").value(PRODUCT_NAME))
                 .andExpect(jsonPath("$.[0].productLocalisations.[0].quantityInLocalisation").value(PRODUCT_LOCALISATION_QUANTITY));
     }
 
     @Test
-    void createLocalisation() throws Exception {
+    void createProduct() throws Exception {
 
-        final String NEW_LOCALISATION_INDEX = "NEW_LOCALISATION_INDEX";
-        final String NEW_LOCALISATION_NAME = "NEW_LOCALISATION_NAME";
-        LocalisationDto localisationDto = new LocalisationDto();
-        localisationDto.setLocalisationName(NEW_LOCALISATION_NAME);
-        localisationDto.setLocalisationIndex(NEW_LOCALISATION_INDEX);
+        ProductDto productDto = new ProductDto();
+        productDto.setQuantity(new BigDecimal("1234.123"));
+        productDto.setProductIndex("RANDOMINDEX_VOL1");
+        productDto.setName("RANDOM PRODUCT NAME 2");
 
-        mockMvc.perform(post("/api/localisation")
+        mockMvc.perform(post("/api/product")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(localisationDto)))
+                .content(TestUtil.convertObjectToJsonBytes(productDto)))
                 .andExpect(status().isCreated());
-
-
     }
 
     @Test
-    void updateLocalisation() throws Exception {
-        final String UPDATED_LOCALISATION_INDEX = "UPDATED_LOCALISATION_INDEX";
+    void updateProduct() throws Exception {
+        final String NEW_PRODUCT_INDEX = "RANDOM_INDEX+_123";
+        product = productRepository.saveAndFlush(Product.builder().productIndex(PRODUCT_INDEX).name(PRODUCT_NAME).quantity(PRODUCT_QUANTITY).build());
+        ProductDto productDto = productMapper.convertToDto(product);
+        product.setProductIndex(NEW_PRODUCT_INDEX);
 
-        localisation = localisationRepository.saveAndFlush(Localisation.builder().localisationIndex(LOCALISATION_INDEX)
-                .localisationName(LOCALISATION_NAME).build());
-
-        LocalisationDto localisationDto = localisationMapper.convertToDto(localisation);
-        localisationDto.setLocalisationIndex(UPDATED_LOCALISATION_INDEX);
-
-        mockMvc.perform(put("/api/localisation")
+        mockMvc.perform(put("/api/product")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(localisationDto)))
+                .content(TestUtil.convertObjectToJsonBytes(productDto)))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void deleteLocalisation() throws Exception {
-        localisation = localisationRepository.saveAndFlush(Localisation.builder().localisationIndex(LOCALISATION_INDEX)
-                .localisationName(LOCALISATION_NAME).build());
+    void deleteProduct() throws Exception {
+        product = productRepository.saveAndFlush(Product.builder().productIndex(PRODUCT_INDEX).name(PRODUCT_NAME).quantity(PRODUCT_QUANTITY).build());
+        ProductDto productDto = productMapper.convertToDto(product);
 
-        LocalisationDto localisationDto = localisationMapper.convertToDto(localisation);
-
-        mockMvc.perform(delete("/api/localisation")
+        mockMvc.perform(delete("/api/product")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(localisationDto)))
+                .content(TestUtil.convertObjectToJsonBytes(productDto)))
                 .andExpect(status().isNoContent());
-
     }
 }
