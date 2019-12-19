@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames={"localisation_id", "product_id"}))
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode (exclude = {"localisation", "product"})
 @ToString
 @NoArgsConstructor
 public class ProductLocalisation {

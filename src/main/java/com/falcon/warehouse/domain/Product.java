@@ -33,7 +33,7 @@ public class Product {
     @Column(nullable = false)
     private BigDecimal quantity;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = CascadeType.ALL)
     private Set<ProductLocalisation> productLocalisations = new HashSet<>();
 
     @Builder

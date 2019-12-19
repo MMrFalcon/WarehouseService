@@ -28,7 +28,7 @@ public class Localisation {
     @Column(unique = true, nullable = false)
     private String localisationName;
 
-    @OneToMany(mappedBy = "localisation")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "localisation", cascade = CascadeType.ALL)
     private Set<ProductLocalisation> productLocalisations = new HashSet<>();
 
     @Builder
