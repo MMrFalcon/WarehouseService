@@ -1,6 +1,5 @@
 package com.falcon.warehouse.dto;
 
-import com.falcon.warehouse.domain.ProductLocalisation;
 import lombok.Data;
 
 import java.util.HashSet;
@@ -15,5 +14,5 @@ public class LocalisationDto {
 
     private String localisationName;
 
-    private Set<ProductLocalisation> productLocalisations = new HashSet<>();
+    private Set<ProductLocalisationDto> productLocalisations = new HashSet<>();
 }

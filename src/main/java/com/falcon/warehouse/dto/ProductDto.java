@@ -1,6 +1,5 @@
 package com.falcon.warehouse.dto;
 
-import com.falcon.warehouse.domain.ProductLocalisation;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -18,5 +17,5 @@ public class ProductDto {
 
     private BigDecimal quantity;
 
-    private Set<ProductLocalisation> productLocalisations = new HashSet<>();
+    private Set<ProductLocalisationDto> productLocalisations = new HashSet<>();
 }

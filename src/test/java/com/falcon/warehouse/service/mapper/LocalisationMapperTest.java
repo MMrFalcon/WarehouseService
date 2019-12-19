@@ -3,6 +3,7 @@ package com.falcon.warehouse.service.mapper;
 import com.falcon.warehouse.domain.Localisation;
 import com.falcon.warehouse.domain.ProductLocalisation;
 import com.falcon.warehouse.dto.LocalisationDto;
+import com.falcon.warehouse.dto.ProductLocalisationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +47,18 @@ class LocalisationMapperTest {
 
     @Test
     void convertToEntity() {
+        ProductLocalisationDto productLocalisationDto = new ProductLocalisationDto();
+        productLocalisationDto.setId(3321L);
+        productLocalisationDto.setLocalisationId(LOCALISATION_ID);
+        Set<ProductLocalisationDto> productLocalisationDtoSet = new HashSet<>();
+        productLocalisationDtoSet.add(productLocalisationDto);
+
         final String NEW_LOCALISATION_INDEX = "NEW  LOCALISATION INDEX";
         LocalisationDto localisationDto = new LocalisationDto();
         localisationDto.setId(LOCALISATION_ID);
         localisationDto.setLocalisationIndex(NEW_LOCALISATION_INDEX);
         localisationDto.setLocalisationName(LOCALISATION_NAME);
-        localisationDto.setProductLocalisations(productLocalisationSet);
+        localisationDto.setProductLocalisations(productLocalisationDtoSet);
 
         Localisation localisation = localisationMapper.convertToEntity(localisationDto);
         assertEquals(NEW_LOCALISATION_INDEX, localisation.getLocalisationIndex());
