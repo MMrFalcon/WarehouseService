@@ -9,10 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
     private final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);

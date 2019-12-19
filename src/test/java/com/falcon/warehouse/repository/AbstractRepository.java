@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class AbstractRepository {
 
     @Autowired
-    ProductRepository productRepository;
+    public ProductRepository productRepository;
 
     @Autowired
-    LocalisationRepository localisationRepository;
+    public LocalisationRepository localisationRepository;
 
     @Autowired
-    ProductLocalisationRepository productLocalisationRepository;
+    public ProductLocalisationRepository productLocalisationRepository;
 }
