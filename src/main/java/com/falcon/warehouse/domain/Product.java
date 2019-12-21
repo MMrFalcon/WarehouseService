@@ -44,4 +44,9 @@ public class Product {
         this.quantity = quantity;
         this.productLocalisations = productLocalisations;
     }
+
+   public void addProductLocalisation(ProductLocalisation productLocalisation) {
+        this.productLocalisations.add(productLocalisation);
+        productLocalisation.setProduct(this);
+    }
 }

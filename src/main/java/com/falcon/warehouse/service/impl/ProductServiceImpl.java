@@ -1,8 +1,13 @@
 package com.falcon.warehouse.service.impl;
 
+import com.falcon.warehouse.domain.Localisation;
+import com.falcon.warehouse.domain.Product;
+import com.falcon.warehouse.domain.ProductLocalisation;
+import com.falcon.warehouse.dto.LocalisationDto;
 import com.falcon.warehouse.dto.ProductDto;
 import com.falcon.warehouse.repository.ProductRepository;
 import com.falcon.warehouse.service.ProductService;
+import com.falcon.warehouse.service.mapper.LocalisationMapper;
 import com.falcon.warehouse.service.mapper.ProductMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +27,12 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final LocalisationMapper localisationMapper;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, LocalisationMapper localisationMapper) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
+        this.localisationMapper = localisationMapper;
     }
 
     @Override
@@ -51,5 +59,24 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto getByProductIndex(String productIndex) {
         log.info("Getting product by index {}", productIndex);
         return productMapper.convertToDto(productRepository.findByProductIndex(productIndex).orElseThrow(EntityNotFoundException::new));
+    }
+
+    @Override
+    public ProductDto addLocalisation(String productIndex, LocalisationDto localisationDto, BigDecimal quantity) {
+        log.info("Adding {} products {} to localisation {}", quantity, productIndex, localisationDto.getLocalisationIndex());
+
+        Product product = productRepository.findByProductIndex(productIndex)
+                .orElseThrow(() -> new EntityNotFoundException("Cannot find product with index " + productIndex));
+
+        Localisation localisation = localisationMapper.convertToEntity(localisationDto);
+
+        ProductLocalisation productLocalisation = new ProductLocalisation();
+        productLocalisation.setProduct(product);
+        productLocalisation.setLocalisation(localisation);
+        productLocalisation.setQuantityInLocalisation(quantity);
+
+        product.addProductLocalisation(productLocalisation);
+
+        return productMapper.convertToDto(productRepository.save(product));
     }
 }

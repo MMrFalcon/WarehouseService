@@ -38,4 +38,9 @@ public class Localisation {
         this.localisationName = localisationName;
         this.productLocalisations = productLocalisations;
     }
+
+    public void addProductLocalisation(ProductLocalisation productLocalisation) {
+        this.productLocalisations.add(productLocalisation);
+        productLocalisation.setLocalisation(this);
+    }
 }
