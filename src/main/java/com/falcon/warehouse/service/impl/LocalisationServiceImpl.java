@@ -7,8 +7,10 @@ import com.falcon.warehouse.dto.LocalisationDto;
 import com.falcon.warehouse.dto.ProductDto;
 import com.falcon.warehouse.repository.LocalisationRepository;
 import com.falcon.warehouse.service.LocalisationService;
+import com.falcon.warehouse.service.ProductLocalisationService;
 import com.falcon.warehouse.service.mapper.LocalisationMapper;
 import com.falcon.warehouse.service.mapper.ProductMapper;
+import exceptions.PairNotUnique;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,13 +30,15 @@ public class LocalisationServiceImpl implements LocalisationService {
     private final LocalisationRepository localisationRepository;
     private final LocalisationMapper localisationMapper;
     private final ProductMapper productMapper;
+    private final ProductLocalisationService productLocalisationService;
 
     public LocalisationServiceImpl(LocalisationRepository localisationRepository, LocalisationMapper localisationMapper,
-                                   ProductMapper productMapper) {
+                                   ProductMapper productMapper, ProductLocalisationService productLocalisationService) {
 
         this.localisationRepository = localisationRepository;
         this.localisationMapper = localisationMapper;
         this.productMapper = productMapper;
+        this.productLocalisationService = productLocalisationService;
     }
 
     @Override
@@ -72,6 +76,9 @@ public class LocalisationServiceImpl implements LocalisationService {
 
         Localisation localisation = localisationRepository.findByLocalisationIndex(localisationIndex)
                 .orElseThrow(() -> new EntityNotFoundException("Cannot find localisation with index " + localisationIndex));
+
+        if (!productLocalisationService.isUniquePair(productDto.getProductIndex(), localisationIndex))
+            throw new PairNotUnique("Pair localisation and product already exists in system");
 
         Product product = productMapper.convertToEntity(productDto);
 

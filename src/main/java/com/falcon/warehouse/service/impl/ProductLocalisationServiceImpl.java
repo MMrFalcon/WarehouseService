@@ -6,6 +6,7 @@ import com.falcon.warehouse.repository.ProductLocalisationRepository;
 import com.falcon.warehouse.service.ProductLocalisationService;
 import com.falcon.warehouse.service.mapper.ProductLocalisationMapper;
 import exceptions.EntityNotFoundException;
+import exceptions.PairNotUnique;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,10 @@ public class ProductLocalisationServiceImpl implements ProductLocalisationServic
     @Override
     public ProductLocalisationDto save(ProductLocalisationDto productLocalisationDto) {
         log.info("Saving productLocalisation {}", productLocalisationDto);
+
+        if (!isUniquePair(productLocalisationDto.getProductIndex(), productLocalisationDto.getLocalisationIndex()))
+            throw new PairNotUnique("Pair localisation and product already exists in system");
+
         return productLocalisationMapper.convertToDto(productLocalisationRepository.save(
                 productLocalisationMapper.convertToEntity(productLocalisationDto)
         ));
@@ -82,6 +87,17 @@ public class ProductLocalisationServiceImpl implements ProductLocalisationServic
             return productLocalisationDtoList;
         } else {
             throw new EntityNotFoundException("Product localisation(s) with product index " + productIndex + "does not exist");
+        }
+    }
+
+    @Override
+    public boolean isUniquePair(String productIndex, String localisationIndex) {
+        log.info("Checking if product {} and localisation {} pair is unique ", productIndex, localisationIndex);
+        if (productLocalisationRepository.findAllByLocalisation_LocalisationIndexEquals(localisationIndex).isPresent()
+                && productLocalisationRepository.findAllByProduct_ProductIndexEquals(productIndex).isPresent()) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

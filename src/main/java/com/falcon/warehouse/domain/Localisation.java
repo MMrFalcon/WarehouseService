@@ -25,7 +25,7 @@ public class Localisation {
     private String localisationIndex;
 
     @NotNull
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String localisationName;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "localisation", cascade = CascadeType.ALL)

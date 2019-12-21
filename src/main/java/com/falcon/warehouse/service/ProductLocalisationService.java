@@ -15,4 +15,6 @@ public interface ProductLocalisationService  {
     List<ProductLocalisationDto> getAllByLocalisationIndex(String localisationIndex);
 
     List<ProductLocalisationDto> getAllByProductIndex(String productIndex);
+
+    boolean isUniquePair(String productIndex, String localisationIndex);
 }

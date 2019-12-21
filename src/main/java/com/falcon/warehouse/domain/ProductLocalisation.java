@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames={"localisation_id", "product_id"}))
+@Table
 @Getter
 @Setter
 @EqualsAndHashCode (exclude = {"localisation", "product"})

@@ -26,7 +26,7 @@ public class Product {
     private String productIndex;
 
     @NotNull
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @NotNull

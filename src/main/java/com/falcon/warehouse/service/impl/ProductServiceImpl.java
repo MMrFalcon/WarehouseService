@@ -6,9 +6,11 @@ import com.falcon.warehouse.domain.ProductLocalisation;
 import com.falcon.warehouse.dto.LocalisationDto;
 import com.falcon.warehouse.dto.ProductDto;
 import com.falcon.warehouse.repository.ProductRepository;
+import com.falcon.warehouse.service.ProductLocalisationService;
 import com.falcon.warehouse.service.ProductService;
 import com.falcon.warehouse.service.mapper.LocalisationMapper;
 import com.falcon.warehouse.service.mapper.ProductMapper;
+import exceptions.PairNotUnique;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,11 +30,15 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final LocalisationMapper localisationMapper;
+    private final ProductLocalisationService productLocalisationService;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, LocalisationMapper localisationMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, LocalisationMapper localisationMapper,
+                              ProductLocalisationService productLocalisationService) {
+
         this.productRepository = productRepository;
         this.productMapper = productMapper;
         this.localisationMapper = localisationMapper;
+        this.productLocalisationService = productLocalisationService;
     }
 
     @Override
@@ -67,6 +73,9 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = productRepository.findByProductIndex(productIndex)
                 .orElseThrow(() -> new EntityNotFoundException("Cannot find product with index " + productIndex));
+
+        if (!productLocalisationService.isUniquePair(productIndex, localisationDto.getLocalisationIndex()))
+            throw new PairNotUnique("Pair localisation and product already exists in system");
 
         Localisation localisation = localisationMapper.convertToEntity(localisationDto);
 
