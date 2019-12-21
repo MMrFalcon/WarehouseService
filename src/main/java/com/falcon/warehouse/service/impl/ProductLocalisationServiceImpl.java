@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @Transactional
@@ -93,9 +94,18 @@ public class ProductLocalisationServiceImpl implements ProductLocalisationServic
     @Override
     public boolean isUniquePair(String productIndex, String localisationIndex) {
         log.info("Checking if product {} and localisation {} pair is unique ", productIndex, localisationIndex);
-        if (productLocalisationRepository.findAllByLocalisation_LocalisationIndexEquals(localisationIndex).isPresent()
-                && productLocalisationRepository.findAllByProduct_ProductIndexEquals(productIndex).isPresent()) {
-            return false;
+        if (productLocalisationRepository.findAllByLocalisation_LocalisationIndexEquals(localisationIndex).isPresent()) {
+            AtomicBoolean isUnique = new AtomicBoolean(true);
+            List<ProductLocalisation> productLocalisations = productLocalisationRepository.
+                    findAllByLocalisation_LocalisationIndexEquals(localisationIndex).get();
+
+            productLocalisations.forEach(productLocalisation -> {
+                if (productLocalisation.getProduct().getProductIndex().equals(productIndex)) {
+                    isUnique.set(false);
+                }
+            });
+
+            return isUnique.get();
         } else {
             return true;
         }
