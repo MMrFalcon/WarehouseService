@@ -4,9 +4,11 @@ import com.falcon.warehouse.WarehouseApplication;
 import com.falcon.warehouse.domain.Localisation;
 import com.falcon.warehouse.domain.Product;
 import com.falcon.warehouse.domain.ProductLocalisation;
+import com.falcon.warehouse.dto.LocalisationDto;
 import com.falcon.warehouse.dto.ProductDto;
 import com.falcon.warehouse.repository.AbstractRepository;
 import com.falcon.warehouse.service.ProductService;
+import com.falcon.warehouse.service.mapper.LocalisationMapper;
 import com.falcon.warehouse.service.mapper.ProductMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,6 +52,9 @@ class ProductControllerTest extends AbstractRepository {
 
     @Autowired
     private ProductMapper productMapper;
+
+    @Autowired
+    private LocalisationMapper localisationMapper;
 
     private MockMvc mockMvc;
 
@@ -137,6 +142,25 @@ class ProductControllerTest extends AbstractRepository {
                 .content(TestUtil.convertObjectToJsonBytes(productDto)))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void addLocalisation() throws Exception {
+        localisation = localisationRepository.saveAndFlush(Localisation.builder().localisationIndex(LOCALISATION_INDEX)
+                .localisationName(LOCALISATION_NAME).productLocalisations(new HashSet<>()).build());
+
+        product = productRepository.saveAndFlush(Product.builder().productIndex(PRODUCT_INDEX).name(PRODUCT_NAME)
+                .quantity(PRODUCT_QUANTITY).productLocalisations(new HashSet<>()).build());
+
+        String url = "/api/product/add/localisation?productIndex=" + product.getProductIndex() + "&quantity=" + PRODUCT_QUANTITY.toString();
+
+        LocalisationDto localisationDto = localisationMapper.convertToDto(localisation);
+
+        mockMvc.perform(put(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(localisationDto)))
+                .andExpect(status().isOk());
+    }
+
 
     @Test
     void deleteProduct() throws Exception {

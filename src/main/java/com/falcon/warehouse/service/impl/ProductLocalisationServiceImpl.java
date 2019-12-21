@@ -35,8 +35,10 @@ public class ProductLocalisationServiceImpl implements ProductLocalisationServic
     public ProductLocalisationDto save(ProductLocalisationDto productLocalisationDto) {
         log.info("Saving productLocalisation {}", productLocalisationDto);
 
-        if (!isUniquePair(productLocalisationDto.getProductIndex(), productLocalisationDto.getLocalisationIndex()))
-            throw new PairNotUnique("Pair localisation and product already exists in system");
+        if (productLocalisationDto.getId() == null) {
+            if (!isUniquePair(productLocalisationDto.getProductIndex(), productLocalisationDto.getLocalisationIndex()))
+                throw new PairNotUnique("Pair localisation and product already exists in system");
+        }
 
         return productLocalisationMapper.convertToDto(productLocalisationRepository.save(
                 productLocalisationMapper.convertToEntity(productLocalisationDto)

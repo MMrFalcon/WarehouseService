@@ -1,6 +1,7 @@
 package com.falcon.warehouse.controller;
 
 import com.falcon.warehouse.dto.LocalisationDto;
+import com.falcon.warehouse.dto.ProductDto;
 import com.falcon.warehouse.service.LocalisationService;
 import exceptions.BadRequestException;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -57,6 +59,16 @@ public class LocalisationController {
         }
 
         LocalisationDto updatedLocalisation = localisationService.save(localisationDto);
+        return new ResponseEntity<>(updatedLocalisation, HttpStatus.OK);
+    }
+
+    @PutMapping("/localisation/add/product")
+    public ResponseEntity<LocalisationDto> addProduct(@RequestParam(value = "localisationIndex") String localisationIndex,
+                                                      @RequestParam(value = "quantity") String quantity,
+                                                      @RequestBody ProductDto productDto) {
+
+        log.info("Rest request to add product to localisation {}", localisationIndex);
+        LocalisationDto updatedLocalisation = localisationService.addProduct(localisationIndex, productDto, new BigDecimal(quantity));
         return new ResponseEntity<>(updatedLocalisation, HttpStatus.OK);
     }
 
