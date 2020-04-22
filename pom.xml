@@ -60,6 +60,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- For javadoc generator exception in java 8 -->
+        <dependency>
+            <groupId>javax.interceptor</groupId>
+            <artifactId>javax.interceptor-api</artifactId>
+            <version>1.2</version>
+        </dependency>
+
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
