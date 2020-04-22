@@ -9,7 +9,7 @@
     </parent>
     <groupId>com.falcon</groupId>
     <artifactId>warehouse</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>warehouse</name>
     <description>Demo project for Spring Boot</description>
 
@@ -98,7 +98,7 @@
 
     <scm>
         <developerConnection>scm:git:https://github.com/MMrFalcon/WarehouseService.git</developerConnection>
-        <tag>warehouse-0.0.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
 </project>
